@@ -2,9 +2,24 @@
 const toggle=document.querySelector('.menu-toggle');
 const nav=document.querySelector('.nav');
 if(toggle&&nav){
+  const closeNav=()=>{
+    nav.classList.remove('open');
+    toggle.setAttribute('aria-expanded','false');
+    document.body.classList.remove('nav-open');
+  };
   toggle.addEventListener('click',()=>{
-    nav.classList.toggle('open');
-    toggle.setAttribute('aria-expanded',nav.classList.contains('open'));
+    const isOpen = nav.classList.toggle('open');
+    toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    document.body.classList.toggle('nav-open', isOpen);
+  });
+  nav.querySelectorAll('a').forEach(link=>link.addEventListener('click', closeNav));
+  document.addEventListener('click',(event)=>{
+    if(!nav.classList.contains('open')) return;
+    if(nav.contains(event.target) || toggle.contains(event.target)) return;
+    closeNav();
+  });
+  window.addEventListener('resize',()=>{
+    if(window.innerWidth>980) closeNav();
   });
 }
 
